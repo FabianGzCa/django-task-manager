@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from .models import Task
+from .forms import TaskForm
 
 # Create your views here.
 
@@ -63,3 +64,23 @@ def signout(request):
 def tasks(request):
     tareas = Task.objects.filter(usuario=request.user, fecha_completada__isnull=True)
     return render(request, 'tasks.html', {'tareas': tareas})
+
+
+@login_required
+def create_task(request):
+    if request.method == 'GET':
+        return render(request, 'create_task.html', {
+            'form': TaskForm
+        })
+    else:
+        try:
+            form = TaskForm(request.POST)
+            nueva_tarea = form.save(commit=False)
+            nueva_tarea.usuario = request.user
+            nueva_tarea.save()
+            return redirect('tasks')
+        except ValueError:
+            return render(request, 'create_task.html', {
+                'form': TaskForm,
+                'error': 'Por favor ingresa datos válidos'
+            })
