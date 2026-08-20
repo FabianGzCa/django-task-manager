@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1 class="text-center display-3 py-5">Tareas pendientes</h1>
+
+            <ul class="list-group">
+                {% for tarea in tareas %}
+                <li class="list-group-item">
+                    <header class="d-flex justify-content-between">
+                        {% if tarea.importante %}
+                        <h1 class="fw-bold text-success">{{tarea.titulo}}</h1>
+                        {% else %}
+                        <h1 class="fw-bold">{{tarea.titulo}}</h1>
+                        {% endif %}
+                        <p>{{tarea.usuario.username}}</p>
+                    </header>
+                    <p>{{tarea.descripcion}}</p>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</main>
+
+{% endblock %}
