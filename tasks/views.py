@@ -1,8 +1,34 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from django.db import IntegrityError
 
 # Create your views here.
 
-def hello_world(request):
-    return HttpResponse('Hello world')
+def home(request):
+    return render(request, 'home.html')
+
+
+def signup(request):
+    if request.method == 'GET':
+        return render(request, 'signup.html', {
+            'form': UserCreationForm
+        })
+    else:
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                usuario = User.objects.create_user(
+                    username=request.POST['username'], password=request.POST['password1'])
+                usuario.save()
+                login(request, usuario)
+                return redirect('tasks')
+            except IntegrityError:
+                return render(request, 'signup.html', {
+                    'form': UserCreationForm,
+                    'error': 'El usuario ya existe'
+                })
+        return render(request, 'signup.html', {
+            'form': UserCreationForm,
+            'error': 'Las contraseñas no coinciden'
+        })
