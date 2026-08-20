@@ -1,11 +1,21 @@
-<h1>Ingresar</h1>
+{% extends 'base.html' %}
 
-{{error}}
+{% block content %}
 
-<form action="/signin/" method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>
-        Ingresar
-    </button>
-</form>
+<main class="container">
+    <div class="row">
+        <section class="col-md-4 offset-md-4 mt-5">
+            <form action="/signin/" method="POST" class="card card-body">
+                <h1 class="text-center">Iniciar sesión</h1>
+                {{error}}
+                {% csrf_token %}
+                {{form.as_p}}
+                <button class="btn btn-primary">
+                    Ingresar
+                </button>
+            </form>
+        </section>
+    </div>
+</main>
+
+{% endblock %}
