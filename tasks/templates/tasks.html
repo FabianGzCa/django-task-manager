@@ -9,7 +9,7 @@
 
             <ul class="list-group">
                 {% for tarea in tareas %}
-                <li class="list-group-item">
+                <a class="list-group-item" href="{% url 'task_detail' tarea.id %}">
                     <header class="d-flex justify-content-between">
                         {% if tarea.importante %}
                         <h1 class="fw-bold text-success">{{tarea.titulo}}</h1>
@@ -19,7 +19,7 @@
                         <p>{{tarea.usuario.username}}</p>
                     </header>
                     <p>{{tarea.descripcion}}</p>
-                </li>
+                </a>
                 {% endfor %}
             </ul>
 

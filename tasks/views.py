@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
@@ -84,3 +84,19 @@ def create_task(request):
                 'form': TaskForm,
                 'error': 'Por favor ingresa datos válidos'
             })
+
+
+@login_required
+def task_detail(request, task_id):
+    if request.method == 'GET':
+        tarea = get_object_or_404(Task, pk=task_id, usuario=request.user)
+        form = TaskForm(instance=tarea)
+        return render(request, 'task_detail.html', {'tarea': tarea, 'form': form})
+    else:
+        try:
+            tarea = get_object_or_404(Task, pk=task_id, usuario=request.user)
+            form = TaskForm(request.POST, instance=tarea)
+            form.save()
+            return redirect('tasks')
+        except ValueError:
+            return render(request, 'task_detail.html', {'tarea': tarea, 'form': form, 'error': 'Error al actualizar la tarea'})
