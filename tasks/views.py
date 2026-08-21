@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.utils import timezone
 from .models import Task
 from .forms import TaskForm
 
@@ -100,3 +101,18 @@ def task_detail(request, task_id):
             return redirect('tasks')
         except ValueError:
             return render(request, 'task_detail.html', {'tarea': tarea, 'form': form, 'error': 'Error al actualizar la tarea'})
+
+
+@login_required
+def tasks_completed(request):
+    tareas = Task.objects.filter(usuario=request.user, fecha_completada__isnull=False).order_by('-fecha_completada')
+    return render(request, 'tasks.html', {'tareas': tareas})
+
+
+@login_required
+def complete_task(request, task_id):
+    tarea = get_object_or_404(Task, pk=task_id, usuario=request.user)
+    if request.method == 'POST':
+        tarea.fecha_completada = timezone.now()
+        tarea.save()
+        return redirect('tasks')
