@@ -19,6 +19,7 @@
                         <p>{{tarea.usuario.username}}</p>
                     </header>
                     <p>{{tarea.descripcion}}</p>
+                    <p>{{tarea.fecha_completada|date:'d/m/Y H:i'}}</p>
                 </a>
                 {% endfor %}
             </ul>

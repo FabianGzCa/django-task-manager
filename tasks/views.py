@@ -56,6 +56,7 @@ def signin(request):
             return redirect('tasks')
 
 
+@login_required
 def signout(request):
     logout(request)
     return redirect('home')
