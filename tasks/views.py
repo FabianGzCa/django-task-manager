@@ -116,3 +116,11 @@ def complete_task(request, task_id):
         tarea.fecha_completada = timezone.now()
         tarea.save()
         return redirect('tasks')
+
+
+@login_required
+def delete_task(request, task_id):
+    tarea = get_object_or_404(Task, pk=task_id, usuario=request.user)
+    if request.method == 'POST':
+        tarea.delete()
+        return redirect('tasks')
